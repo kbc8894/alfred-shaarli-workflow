@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string></string>
+	<key>category</key>
+	<string>Productivity</string>
+	<key>connections</key>
+	<dict>
+		<key>383A38E2-3C5A-478B-81D0-54B3A928D682</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E731E555-AD8E-4162-AB60-AE5A24BA134A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>4EEAA809-4977-4C1A-BBC8-59DBA86FFD31</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>AE23AA80-0C45-4804-A191-3DADB5C1C13B</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>AE23AA80-0C45-4804-A191-3DADB5C1C13B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>383A38E2-3C5A-478B-81D0-54B3A928D682</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Byungchan Kim</string>
+	<key>description</key>
+	<string>Save page to shaarli</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Save page to shaarli</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>shaa</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>function run(argv) {
+  // JavaScript for Automation (JXA) //
+
+  const frontmost_app_name = Application('System Events').applicationProcesses.where({ frontmost: true }).name()[0]
+  const frontmost_app = Application(frontmost_app_name)
+
+  if (['Google Chrome', 'Google Chrome Canary', 'Chromium', 'Opera', 'Vivaldi', 'Brave Browser'].indexOf(frontmost_app_name) &gt; -1) {
+    var current_tab_url = frontmost_app.windows[0].activeTab.url()
+    return JSON.stringify({"items":[{ title:"Save url", subtitle: current_tab_url ,arg: current_tab_url }]})
+
+  } else if (['Safari', 'Safari Technology Preview', 'Webkit'].indexOf(frontmost_app_name) &gt; -1) {
+    var current_tab_url = frontmost_app.documents[0].url()
+    return JSON.stringify({"items":[{ title:"Save url", subtitle: current_tab_url ,arg: current_tab_url }]})
+  } else {
+    throw new Error('You need a supported browser as your frontmost app')
+  }
+}</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Save page to shaarli</string>
+				<key>type</key>
+				<integer>7</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>4EEAA809-4977-4C1A-BBC8-59DBA86FFD31</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>URL=$1
+TOKEN=$(curl -s https://fn.byungchan.kim/function/create-jwt -d '{"secret": "'"$SHAARLI_API_SECRET"'","algorithm": "HS512"}')
+TITLE=$(curl -s https://fn.byungchan.kim/function/extract-title -d '{"url":"'"$URL"'"}')
+
+curl -s -H "Authorization: Bearer ${TOKEN}" -H "Content-Type: application/json" -X POST https://shaarli.byungchan.kim/api/v1/links -d '{"url": "'"$URL"'", "title": "'"$TITLE"'", "tags":["default"]}'
+
+echo -n "$URL"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>383A38E2-3C5A-478B-81D0-54B3A928D682</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Successfully saved to your shaarli!</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>E731E555-AD8E-4162-AB60-AE5A24BA134A</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>{query}</string>
+				<key>passthroughargument</key>
+				<false/>
+				<key>variables</key>
+				<dict>
+					<key>text</key>
+					<string>{query}</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>AE23AA80-0C45-4804-A191-3DADB5C1C13B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>Safari extension does not exist.
+This workflow is for this
+
+Need to be setup environment variable
+- SHAARLI_HOST : self-hosted url
+- SHAARLI_API_SECRET : Tools &gt; Configure your Shaarli &gt; API secret
+
+
+Supported Browsers
+- Safari
+- Google Chrome
+- Google Chrome Canary
+- Opera
+- Vivaldi
+- Brave Browser</string>
+	<key>uidata</key>
+	<dict>
+		<key>383A38E2-3C5A-478B-81D0-54B3A928D682</key>
+		<dict>
+			<key>xpos</key>
+			<integer>280</integer>
+			<key>ypos</key>
+			<integer>190</integer>
+		</dict>
+		<key>4EEAA809-4977-4C1A-BBC8-59DBA86FFD31</key>
+		<dict>
+			<key>xpos</key>
+			<integer>20</integer>
+			<key>ypos</key>
+			<integer>190</integer>
+		</dict>
+		<key>AE23AA80-0C45-4804-A191-3DADB5C1C13B</key>
+		<dict>
+			<key>xpos</key>
+			<integer>190</integer>
+			<key>ypos</key>
+			<integer>220</integer>
+		</dict>
+		<key>E731E555-AD8E-4162-AB60-AE5A24BA134A</key>
+		<dict>
+			<key>xpos</key>
+			<integer>505</integer>
+			<key>ypos</key>
+			<integer>190</integer>
+		</dict>
+	</dict>
+	<key>variables</key>
+	<dict>
+		<key>SHAARLI_API_SECRET</key>
+		<string>1c3e4ea74974</string>
+		<key>SHAARLI_HOST</key>
+		<string>https://shaarli.byungchan.kim</string>
+	</dict>
+	<key>variablesdontexport</key>
+	<array>
+		<string>SHAARLI_HOST</string>
+		<string>SHAARLI_API_SECRET</string>
+	</array>
+	<key>version</key>
+	<string>0.1</string>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>
